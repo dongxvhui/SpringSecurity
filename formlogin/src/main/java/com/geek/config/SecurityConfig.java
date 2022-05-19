@@ -15,12 +15,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login.html")
+//                .loginPage("/login.html")
+                .loginPage("/mylogin.html")
                 .loginProcessingUrl("/doLogin")
 //                .defaultSuccessUrl("/index")   //实现登录成功后的跳转，会自动重定向到登录之前的地址
 //                .successForwardUrl("/index")    //实现登录成功后的跳转，跳转到successForwardUrl所指定的页面
-                .successHandler(new MyAuthenticationSuccessHandler())
-                .failureUrl("/login.html")
+//                .successHandler(new MyAuthenticationSuccessHandler())
+                .defaultSuccessUrl("/index.html")
+//                .failureUrl("/login.html")
+                .failureForwardUrl("/mylogin.html")
                 .usernameParameter("uname")
                 .passwordParameter("passwd")
                 .permitAll()
@@ -28,11 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 //   自定义SavedRequestAwareAuthenticationSuccessHandler
-    SavedRequestAwareAuthenticationSuccessHandler successHandler(){
-        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
-        handler.setDefaultTargetUrl("/index");
-        handler.setTargetUrlParameter("target");
-        return handler;
-    }
+//    SavedRequestAwareAuthenticationSuccessHandler successHandler(){
+//        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
+//        handler.setDefaultTargetUrl("/index");
+//        handler.setTargetUrlParameter("target");
+//        return handler;
+//    }
 
 }
