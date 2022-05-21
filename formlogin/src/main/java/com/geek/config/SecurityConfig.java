@@ -1,5 +1,6 @@
 package com.geek.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geek.handle.MyAuthenticationFailureHandler;
 import com.geek.handle.MyAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -35,12 +39,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
 //                .logoutUrl("/logout")
                 .logoutRequestMatcher(new OrRequestMatcher(
-                        new AntPathRequestMatcher("logout1","GET"),
-                        new AntPathRequestMatcher("logout2","POST")
+                        new AntPathRequestMatcher("/logout1","GET"),
+                        new AntPathRequestMatcher("/logout2","POST")
                 ))
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutSuccessUrl("/mylogin.html")
+//                .logoutSuccessUrl("/mylogin.html")
+                .defaultLogoutSuccessHandlerFor((req, resp, auth) -> {
+                    resp.setContentType("application/json;charset=utf-8");
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("status",200);
+                    result.put("msg","使用logout1注销成功！");
+                    ObjectMapper om = new ObjectMapper();
+                    String s = om.writeValueAsString(result);
+                    resp.getWriter().write(s);
+                },new AntPathRequestMatcher("/logout1","GET"))
+                .defaultLogoutSuccessHandlerFor((req, resp, auth) -> {
+                    resp.setContentType("application/json;charset=utf-8");
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("status",200);
+                    result.put("msg","使用logout2注销成功！");
+                    ObjectMapper om = new ObjectMapper();
+                    String s = om.writeValueAsString(result);
+                    resp.getWriter().write(s);
+                },new AntPathRequestMatcher("/logout2","POST"))
                 .and()
                 .csrf().disable();
     }
