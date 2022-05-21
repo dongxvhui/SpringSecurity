@@ -30,6 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("passwd")
                 .permitAll()
                 .and()
+                .logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutSuccessUrl("/mylogin.html")
+                .and()
                 .csrf().disable();
     }
 //   自定义SavedRequestAwareAuthenticationSuccessHandler
