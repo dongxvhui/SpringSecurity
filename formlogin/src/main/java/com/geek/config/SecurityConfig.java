@@ -1,5 +1,6 @@
 package com.geek.config;
 
+import com.geek.handle.MyAuthenticationFailureHandler;
 import com.geek.handle.MyAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,8 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .successForwardUrl("/index")    //实现登录成功后的跳转，跳转到successForwardUrl所指定的页面
 //                .successHandler(new MyAuthenticationSuccessHandler())
                 .defaultSuccessUrl("/index.html")
+                .failureHandler(new MyAuthenticationFailureHandler())
 //                .failureUrl("/login.html")
-                .failureForwardUrl("/mylogin.html")
+//                .failureForwardUrl("/mylogin.html")
                 .usernameParameter("uname")
                 .passwordParameter("passwd")
                 .permitAll()
