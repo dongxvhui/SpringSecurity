@@ -1,0 +1,46 @@
+package com.geek;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    DataSource dataSource;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth)throws Exception{
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
+        if(!manager.userExists("javaboy")){
+            manager.createUser(User.withUsername("javaboy").password("{noop}123").roles("admin").build());
+        }
+        if(!manager.userExists("geek")){
+            manager.createUser(User.withUsername("geek").password("{noop}123").roles("user").build());
+        }
+        auth.userDetailsService(manager);
+    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/mylogin.html")
+                .loginProcessingUrl("/doLogin")
+                .defaultSuccessUrl("/index.html")
+                .failureHandler(new MyAuthenticationFailureHandler())
+                .usernameParameter("uname")
+                .passwordParameter("passwd")
+                .permitAll()
+                .and()
+                .csrf().disable();
+    }
+}
