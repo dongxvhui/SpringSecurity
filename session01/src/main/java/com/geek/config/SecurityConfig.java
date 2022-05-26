@@ -41,16 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .maximumSessions(1)
 //                .expiredUrl("/login"); //会话失效后重定向到/login
-                .expiredSessionStrategy(event -> {
-                    HttpServletResponse response = event.getResponse();
-                    response.setContentType("application/json;charset=utf-8");
-                    Map<String, Object> result = new HashMap<>();
-                    result.put("status",500);
-                    result.put("msg", "当前会话已经失效，请重新登录");
-                    String s = new ObjectMapper().writeValueAsString(result);
-                    response.getWriter().print(s);
-                    response.flushBuffer();
-                });
+                  //会话失效后，返回JSON提示
+//                .expiredSessionStrategy(event -> {
+//                    HttpServletResponse response = event.getResponse();
+//                    response.setContentType("application/json;charset=utf-8");
+//                    Map<String, Object> result = new HashMap<>();
+//                    result.put("status",500);
+//                    result.put("msg", "当前会话已经失效，请重新登录");
+//                    String s = new ObjectMapper().writeValueAsString(result);
+//                    response.getWriter().print(s);
+//                    response.flushBuffer();
+//                });
+                .maxSessionsPreventsLogin(true); //阻止后来者登录，直到当前用户主动下线
 
 
     }
