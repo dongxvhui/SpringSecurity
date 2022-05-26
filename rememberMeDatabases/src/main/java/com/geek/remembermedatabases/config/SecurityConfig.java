@@ -41,11 +41,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.authorizeRequests()
+                .antMatchers("/admin").fullyAuthenticated()
+                .antMatchers("/rememberme").rememberMe()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .and()
                 .rememberMe()
+                .key("geek")
                 .tokenRepository(jdbcTokenRepository())
                 .and()
                 .csrf().disable();
