@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace：命名空间，指定为接口的全名
+-->
+<mapper namespace="com.geek.mapper.UserMapper">
+    <select id="loadUserByUsername" resultType="com.geek.domain.User">
+        SELECT * FROM security13.user where username=#{username};
+    </select>
+
+    <select id="getUserRoleByUid" resultType="com.geek.domain.Role">
+        SELECT r.* FROM security13.role r ,security13.user_role ur where ur.uid=#{uid} and ur.rid=r.id;
+    </select>
+
+</mapper>
